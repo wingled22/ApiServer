@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "CF5PoB4q5krV2bQOpNsiIA5LpNWDuFmGVSfFeKQ9Yxw=",
+  "Source": "olappApi",
+  "BasePath": "_content/olappApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
