@@ -24,7 +24,7 @@ public partial class OlappContext : DbContext
     public virtual DbSet<Transaction> Transactions { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseMySql("server=localhost;database=olapp;user=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.27-mariadb"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -49,13 +49,13 @@ public partial class OlappContext : DbContext
                 .HasMaxLength(200)
                 .HasColumnName("address");
             entity.Property(e => e.Barangay)
-                .HasColumnType("int(11)")
+                .HasMaxLength(20)
                 .HasColumnName("barangay");
             entity.Property(e => e.Bday)
                 .HasMaxLength(70)
                 .HasColumnName("bday");
             entity.Property(e => e.City)
-                .HasColumnType("int(11)")
+                .HasMaxLength(11)
                 .HasColumnName("city");
             entity.Property(e => e.ContactNumber)
                 .HasMaxLength(20)
@@ -66,14 +66,17 @@ public partial class OlappContext : DbContext
             entity.Property(e => e.EmailAddress)
                 .HasMaxLength(100)
                 .HasColumnName("emailAddress");
+            entity.Property(e => e.Gender)
+                .HasMaxLength(11)
+                .HasColumnName("gender");
             entity.Property(e => e.Municipal)
-                .HasColumnType("int(11)")
+                .HasMaxLength(20)
                 .HasColumnName("municipal");
             entity.Property(e => e.Name)
                 .HasMaxLength(70)
                 .HasColumnName("name");
             entity.Property(e => e.Province)
-                .HasColumnType("int(11)")
+                .HasMaxLength(20)
                 .HasColumnName("province");
             entity.Property(e => e.Purok)
                 .HasColumnType("int(11)")

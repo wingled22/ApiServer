@@ -9,15 +9,17 @@ public partial class Client
 
     public string? Name { get; set; }
 
+    public string Gender { get; set; } = null!;
+
     public string? Email { get; set; }
 
     public string? Bday { get; set; }
 
-    public int Province { get; set; }
+    public string Province { get; set; } = null!;
 
-    public int? Municipal { get; set; }
+    public string? Municipal { get; set; }
 
-    public int? Barangay { get; set; }
+    public string? Barangay { get; set; }
 
     public int? Purok { get; set; }
 
@@ -25,7 +27,7 @@ public partial class Client
 
     public string? AdditionalAddressInfo { get; set; }
 
-    public int? City { get; set; }
+    public string? City { get; set; }
 
     public string? EmailAddress { get; set; }
 
