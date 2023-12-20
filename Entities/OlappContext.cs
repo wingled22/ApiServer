@@ -51,9 +51,9 @@ public partial class OlappContext : DbContext
             entity.Property(e => e.Barangay)
                 .HasMaxLength(20)
                 .HasColumnName("barangay");
-            entity.Property(e => e.Bday)
+            entity.Property(e => e.Birthdate)
                 .HasMaxLength(70)
-                .HasColumnName("bday");
+                .HasColumnName("birthdate");
             entity.Property(e => e.City)
                 .HasMaxLength(11)
                 .HasColumnName("city");

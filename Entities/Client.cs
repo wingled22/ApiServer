@@ -9,13 +9,13 @@ public partial class Client
 
     public string? Name { get; set; }
 
-    public string Gender { get; set; } = null!;
+    public string? Gender { get; set; }
 
     public string? Email { get; set; }
 
-    public string? Bday { get; set; }
+    public string? Birthdate { get; set; }
 
-    public string Province { get; set; } = null!;
+    public string? Province { get; set; }
 
     public string? Municipal { get; set; }
 

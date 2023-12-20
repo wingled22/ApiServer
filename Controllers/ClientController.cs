@@ -14,17 +14,17 @@ namespace olappApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomController : ControllerBase
+    public class ClientController : ControllerBase
     {
         private readonly OlappContext _context;
 
-        public CustomController(OlappContext context)
+        public ClientController(OlappContext context)
         {
             _context = context;
         }
 
         // GET: api/Client
-        [HttpGet]
+        [HttpGet("GetClients")]
         public async Task<ActionResult<IEnumerable<Client>>> GetClients()
         {
           if (_context.Clients == null)
@@ -45,7 +45,7 @@ namespace olappApi.Controllers
             Client client = new Client(){
                 Name = c.FullName,
                 Email = c.Email,
-                Bday = c.BirthDate,
+                Birthdate = c.BirthDate,
                 Province = c.Province,
                 City = c.City,
                 Barangay = c.Barangay,
@@ -66,6 +66,7 @@ namespace olappApi.Controllers
             l.DeductInsurance = c.DeductInsurance;
             l.OtherFee = c.DeductOther;
             l.Type = c.LoanType;
+            l.Status = "Unpaid";
 
             if(l.Interest == null || l.Interest == 0 )
                 l.InterestedAmount = 0;
@@ -157,6 +158,20 @@ namespace olappApi.Controllers
             return Ok();
         } 
 
+        [HttpGet("GetClientLoans")]
+        public async Task<ActionResult<IEnumerable<Loan>>> GetClientLoans(long id){
+
+            if(id != null || id != 0){
+
+                return await _context.Loans.Where(x => x.ClientId == id).ToListAsync();
+
+            }
+            
+            return NotFound();
+        }
+
+
+        
         // // GET: api/Client/5
         // [HttpGet("{id}")]
         // public async Task<ActionResult<Client>> GetClient(long id)
