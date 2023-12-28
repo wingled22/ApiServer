@@ -17,32 +17,38 @@ namespace olappApi.Controllers
     public class ClientController : ControllerBase
     {
         private readonly OlappContext _context;
+        private readonly ILogger<ClientController> _logger;
 
-        public ClientController(OlappContext context)
+
+        public ClientController(OlappContext context, ILogger<ClientController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/Client
         [HttpGet("GetClients")]
         public async Task<ActionResult<IEnumerable<Client>>> GetClients()
         {
-          if (_context.Clients == null)
-          {
-              return NotFound();
-          }
+            if (_context.Clients == null)
+            {
+                return NotFound();
+            }
             return await _context.Clients.ToListAsync();
         }
 
         [HttpPost("PostClient")]
-        public IActionResult PostClient(ClientAndLoanCreation c){
+        public IActionResult PostClient(ClientAndLoanCreation c)
+        {
 
-            if(!ModelState.IsValid){
+            if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
             }
 
             //create client
-            Client client = new Client(){
+            Client client = new Client()
+            {
                 Name = c.FullName,
                 Email = c.Email,
                 Birthdate = c.BirthDate,
@@ -68,7 +74,7 @@ namespace olappApi.Controllers
             l.Type = c.LoanType;
             l.Status = "Unpaid";
 
-            if(l.Interest == null || l.Interest == 0 )
+            if (l.Interest == null || l.Interest == 0)
                 l.InterestedAmount = 0;
             else
                 l.InterestedAmount = (l.Interest / 100) * l.Capital;
@@ -79,13 +85,13 @@ namespace olappApi.Controllers
             l.DateTime = DateTime.Now.ToString();
             if (l.Type == "Daily")
                 l.DueDate = DateTime.Now.AddDays(Convert.ToInt32(l.NoPayment));
-            
+
             //Emergency
             if (l.Type == "Weekly" || l.Type == "Emergency")
             {
                 l.DueDate = DateTime.Now.AddDays(Convert.ToInt32(l.NoPayment) * 7);
             }
-            
+
             //P.O Cash
             if (l.Type == "Bi-Monthly" || l.Type == "P.O Cash")
             {
@@ -93,7 +99,7 @@ namespace olappApi.Controllers
             }
 
             //Others
-            if ( l.Type == "Monthly" || l.Type == "Others")
+            if (l.Type == "Monthly" || l.Type == "Others")
             {
                 l.DueDate = DateTime.Now.AddMonths(Convert.ToInt32(l.NoPayment));
             }
@@ -122,14 +128,14 @@ namespace olappApi.Controllers
                     temp.Date = DateTime.Now.AddDays(i);
                     schedules.Add(temp);
                 }
-                
+
                 //Emergency
                 if (l.Type == "Weekly" || l.Type == "Emergency")
                 {
-                    temp.Date = DateTime.Now.AddDays(i*7);
+                    temp.Date = DateTime.Now.AddDays(i * 7);
                     schedules.Add(temp);
                 }
-                
+
                 //P.O Cash
                 if (l.Type == "Bi-Monthly" || l.Type == "P.O Cash")
                 {
@@ -138,7 +144,7 @@ namespace olappApi.Controllers
                 }
 
                 //Others
-                if ( l.Type == "Monthly" || l.Type == "Others")
+                if (l.Type == "Monthly" || l.Type == "Others")
                 {
                     temp.Date = DateTime.Now.AddMonths(i);
                     schedules.Add(temp);
@@ -148,7 +154,7 @@ namespace olappApi.Controllers
                     temp.Date = DateTime.Now.AddYears(i);
                     schedules.Add(temp);
                 }
-                
+
             }
 
             _context.Schedules.AddRange(schedules);
@@ -156,22 +162,51 @@ namespace olappApi.Controllers
 
 
             return Ok();
-        } 
+        }
 
         [HttpGet("GetClientLoans")]
-        public async Task<ActionResult<IEnumerable<Loan>>> GetClientLoans(long id){
+        public async Task<ActionResult<IEnumerable<Loan>>> GetClientLoans(long id)
+        {
 
-            if(id != null || id != 0){
+            if (id != null || id != 0)
+            {
 
                 return await _context.Loans.Where(x => x.ClientId == id).ToListAsync();
 
             }
-            
+
+            return NotFound();
+        }
+
+        [HttpGet("SearchClientByName")]
+        public async Task<ActionResult<IEnumerable<Client>>> SearchClientByName(string searchString)
+        {
+
+            _logger.LogError(searchString);
+            try
+            {
+                var clients = await _context.Clients
+                    .Where(c => EF.Functions.Like(c.Name, $"%{searchString}%"))
+                    .ToListAsync();
+
+                if (clients.Any())
+                {
+                    return Ok(clients);
+                }
+                else
+                {
+                    return Ok();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+
             return NotFound();
         }
 
 
-        
         // // GET: api/Client/5
         // [HttpGet("{id}")]
         // public async Task<ActionResult<Client>> GetClient(long id)
