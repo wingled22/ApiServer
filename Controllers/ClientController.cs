@@ -164,17 +164,23 @@ namespace olappApi.Controllers
             return Ok();
         }
 
+        [HttpGet("GetClientById")]
+        public async Task<ActionResult<Client>> GetClientById(long id)
+        {
+            if (id != null || id != 0)
+            {
+                return await _context.Clients.Where(x => x.Id == id).FirstOrDefaultAsync();
+            }
+            return NotFound();
+        }
+
         [HttpGet("GetClientLoans")]
         public async Task<ActionResult<IEnumerable<Loan>>> GetClientLoans(long id)
         {
-
             if (id != null || id != 0)
             {
-
                 return await _context.Loans.Where(x => x.ClientId == id).ToListAsync();
-
             }
-
             return NotFound();
         }
 
