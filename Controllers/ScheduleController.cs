@@ -21,14 +21,33 @@ namespace olappApi.Controllers
         }
 
         [HttpGet("GetSchedulesByLoanId")]
-        public async Task<ActionResult<IEnumerable<Schedule>>> GetSchedulesByLoanId(long id){
+        public async Task<ActionResult<IEnumerable<Schedule>>> GetSchedulesByLoanId(long id)
+        {
 
-            if(id != null || id != 0){
+            if (id != null || id != 0)
+            {
 
                 return await _context.Schedules.Where(x => x.LoanId == id).ToListAsync();
 
             }
-            
+
+            return NotFound();
+        }
+
+        [HttpGet("GetScheduleById")]
+        public async Task<ActionResult<Schedule>> GetScheduleById(long id)
+        {
+
+            if (id != null || id != 0)
+            {
+
+                return await _context.Schedules
+                    .Where(x => x.Id == id)
+                    .Where(x => x.Status.ToLower() == "unpaid")
+                    .FirstOrDefaultAsync();
+
+            }
+
             return NotFound();
         }
 
