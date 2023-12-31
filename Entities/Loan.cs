@@ -33,9 +33,9 @@ public partial class Loan
 
     public DateTime? DueDate { get; set; }
 
-    public decimal? TotalPenalty { get; set; }
+    public decimal TotalPenalty { get; set; }
 
-    public decimal? AddedInterest { get; set; }
+    public decimal AddedInterest { get; set; }
 
     public decimal? OtherFee { get; set; }
 }

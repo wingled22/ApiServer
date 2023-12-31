@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.EntityFrameworkCore;
 using olappApi.Entities;
 
@@ -27,7 +28,22 @@ namespace olappApi.Controllers
             if (id != null || id != 0)
             {
 
-                return await _context.Schedules.Where(x => x.LoanId == id).ToListAsync();
+                var  res =  await (
+                    from s in _context.Schedules
+                    where (long)s.LoanId == id
+                    select new Schedule{
+                        Id = s.Id,
+                        LoanId = s.LoanId,
+                        Date = s.Date,
+                        Status = s.Status,
+                        Collectables = s.Collectables - (_context.Transactions.Where(x => x.ScheduleId == s.Id).Sum(s=> s.Amount))
+                    }
+
+                ).ToListAsync();
+
+                return res;
+
+                // return await _context.Schedules.Where(x => x.LoanId == id).ToListAsync();
 
             }
 

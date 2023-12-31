@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NuGet.Configuration;
 using olappApi.Entities;
+using olappApi.Model;
 
 namespace olappApi.Controllers
 {
@@ -175,11 +176,40 @@ namespace olappApi.Controllers
         }
 
         [HttpGet("GetClientLoans")]
-        public async Task<ActionResult<IEnumerable<Loan>>> GetClientLoans(long id)
+        public async Task<ActionResult<IEnumerable<ClientLoanInfo>>> GetClientLoans(long id)
         {
             if (id != null || id != 0)
             {
-                return await _context.Loans.Where(x => x.ClientId == id).ToListAsync();
+                List<ClientLoanInfo> res = await (
+                    from l in _context.Loans
+                    where l.ClientId == id
+                    select new ClientLoanInfo
+                    {
+                        Id = l.Id,
+                        ClientId = l.ClientId ?? 0, // Assuming ClientId is nullable, replace 0 with the default value you prefer
+                        Type = l.Type,
+                        DeductCbu = l.DeductCbu ?? 0,
+                        DeductInsurance = l.DeductInsurance ?? 0,
+                        OtherFee = l.OtherFee ?? 0,
+                        LoanAmount = l.LoanAmount ?? 0,
+                        Capital = l.Capital ?? 0,
+                        Interest = l.Interest ?? 0,
+                        InterestedAmount = l.InterestedAmount ?? 0,
+                        LoanReceivable = l.LoanReceivable ?? 0,
+                        NoPayment = l.NoPayment ?? 0,
+                        Status = l.Status,
+                        DateTime = l.DateTime,
+                        DueDate = l.DueDate ?? DateTime.MinValue, // Assuming DueDate is nullable, replace DateTime.MinValue with the default value you prefer
+                        TotalPenalty = (long)l.TotalPenalty,
+                        AddedInterest = (long)l.AddedInterest,
+                        Collected = _context.Transactions
+                        .Where(x => x.LoanId == l.Id)
+                        .Sum(s => (decimal?)s.Amount) ?? 0,
+                    }
+                ).ToListAsync();
+
+                // return await _context.Loans.Where(x => x.ClientId == id).ToListAsync();
+                return  res;
             }
             return NotFound();
         }

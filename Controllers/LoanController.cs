@@ -28,6 +28,8 @@ namespace olappApi.Controllers
           {
               return NotFound();
           }
+
+           
             return await _context.Loans.ToListAsync();
         }
 
@@ -39,6 +41,9 @@ namespace olappApi.Controllers
           {
               return NotFound();
           }
+
+          
+
             var loan = await _context.Loans.FindAsync(id);
 
             if (loan == null)
