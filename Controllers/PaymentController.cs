@@ -96,7 +96,6 @@ namespace olappApi.Controllers
                             }
                             schedSummedPartialPayments = getTransactionBySchedId.DefaultIfEmpty().Sum();
 
-                            //TODO: condition if paid || partial
                             var testNum = ((decimal)item.Collectables - schedSummedPartialPayments) - currentAmt;
                             if (testNum <= 0)
                             {

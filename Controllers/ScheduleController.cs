@@ -28,15 +28,16 @@ namespace olappApi.Controllers
             if (id != null || id != 0)
             {
 
-                var  res =  await (
+                var res = await (
                     from s in _context.Schedules
                     where (long)s.LoanId == id
-                    select new Schedule{
+                    select new Schedule
+                    {
                         Id = s.Id,
                         LoanId = s.LoanId,
                         Date = s.Date,
                         Status = s.Status,
-                        Collectables = s.Collectables - (_context.Transactions.Where(x => x.ScheduleId == s.Id).Sum(s=> s.Amount))
+                        Collectables = s.Collectables - (_context.Transactions.Where(x => x.ScheduleId == s.Id).Sum(s => s.Amount))
                     }
 
                 ).ToListAsync();
@@ -53,19 +54,37 @@ namespace olappApi.Controllers
         [HttpGet("GetScheduleById")]
         public async Task<ActionResult<Schedule>> GetScheduleById(long id)
         {
-
-            if (id != null || id != 0)
+            try
             {
+                if (id == 0)
+                {
+                    return BadRequest("Invalid id");
+                }
 
-                return await _context.Schedules
-                    .Where(x => x.Id == id)
-                    .Where(x => x.Status.ToLower() == "unpaid")
-                    .FirstOrDefaultAsync();
+                Schedule sched = await (
+                    from s in _context.Schedules
+                    where s.Id == id
+                    select new Schedule
+                    {
+                        Id = s.Id,
+                        LoanId = s.LoanId,
+                        Date = s.Date,
+                        Status = s.Status,
+                        Collectables = s.Collectables - _context.Transactions
+                            .Where(x => x.ScheduleId == s.Id)
+                            .Sum(s => s.Amount)
+                    }
+                ).FirstOrDefaultAsync();
 
+                return sched != null ? Ok(sched) : NotFound();
             }
-
-            return NotFound();
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as needed
+                return StatusCode(500, "Internal Server Error");
+            }
         }
+
 
     }
 }

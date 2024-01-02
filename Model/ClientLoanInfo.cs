@@ -11,7 +11,7 @@ namespace olappApi.Model
 
         public long? ClientId { get; set; }
 
-        public string Type { get; set; }
+        public string? Type { get; set; }
 
         public decimal? DeductCbu { get; set; }
 
@@ -31,7 +31,7 @@ namespace olappApi.Model
 
         public string? Status { get; set; }
 
-        public string DateTime { get; set; }
+        public string? DateTime { get; set; }
 
         public DateTime DueDate { get; set; }
 
