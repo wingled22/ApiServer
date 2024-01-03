@@ -23,6 +23,10 @@ public partial class OlappContext : DbContext
 
     public virtual DbSet<Transaction> Transactions { get; set; }
 
+    public virtual DbSet<User> Users { get; set; }
+
+    public virtual DbSet<Usertype> Usertypes { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseMySql("server=localhost;database=olapp;user=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.27-mariadb"));
@@ -92,6 +96,7 @@ public partial class OlappContext : DbContext
             entity.Property(e => e.Id).HasColumnType("bigint(20)");
             entity.Property(e => e.AddedInterest)
                 .HasPrecision(18, 2)
+                .HasDefaultValueSql("'0.00'")
                 .HasColumnName("added_interest");
             entity.Property(e => e.Capital)
                 .HasPrecision(18, 2)
@@ -134,6 +139,7 @@ public partial class OlappContext : DbContext
                 .HasColumnName("status");
             entity.Property(e => e.TotalPenalty)
                 .HasPrecision(18, 2)
+                .HasDefaultValueSql("'0.00'")
                 .HasColumnName("total_penalty");
             entity.Property(e => e.Type)
                 .HasMaxLength(255)
@@ -188,6 +194,34 @@ public partial class OlappContext : DbContext
             entity.Property(e => e.ScheduleId)
                 .HasColumnType("bigint(20)")
                 .HasColumnName("schedule_id");
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("User");
+
+            entity.Property(e => e.Id).HasColumnType("int(11)");
+            entity.Property(e => e.Password)
+                .HasMaxLength(50)
+                .HasColumnName("password");
+            entity.Property(e => e.Username)
+                .HasMaxLength(50)
+                .HasColumnName("username");
+            entity.Property(e => e.Usertype)
+                .HasColumnType("int(11)")
+                .HasColumnName("usertype");
+        });
+
+        modelBuilder.Entity<Usertype>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("Usertype");
+
+            entity.Property(e => e.Id).HasColumnType("int(11)");
+            entity.Property(e => e.Type).HasMaxLength(10);
         });
 
         OnModelCreatingPartial(modelBuilder);
