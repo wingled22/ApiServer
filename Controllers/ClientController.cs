@@ -93,7 +93,7 @@ namespace olappApi.Controllers
             }
 
             //P.O Cash
-            if (l.Type == "Bi-Monthly" || l.Type == "P.O Cash")
+            if (l.Type == "Bi-Monthly" || l.Type == "PO Cash")
             {
                 l.DueDate = DateTime.Now.AddDays(Convert.ToInt32(l.NoPayment) * 15);
             }
@@ -136,7 +136,7 @@ namespace olappApi.Controllers
                 }
 
                 //P.O Cash
-                if (l.Type == "Bi-Monthly" || l.Type == "P.O Cash")
+                if (l.Type == "Bi-Monthly" || l.Type == "PO Cash")
                 {
                     temp.Date = DateTime.Now.AddDays(i * 15);
                     schedules.Add(temp);
@@ -164,7 +164,7 @@ namespace olappApi.Controllers
         }
 
         [HttpPost("PostClientLoan")]
-        public IActionResult PostClientLoan(LoanCreation c)
+        public async Task<IActionResult> PostClientLoan(LoanCreation c)
         {
             Loan l = new Loan();
             l.ClientId = c.ClientId;
@@ -196,7 +196,7 @@ namespace olappApi.Controllers
             }
 
             //P.O Cash
-            if (l.Type == "Bi-Monthly" || l.Type == "P.O Cash")
+            if (l.Type == "Bi-Monthly" || l.Type == "PO Cash")
             {
                 l.DueDate = DateTime.Now.AddDays(Convert.ToInt32(l.NoPayment) * 15);
             }
@@ -214,7 +214,7 @@ namespace olappApi.Controllers
             decimal dailyPayment = Convert.ToDecimal(l.LoanAmount / l.NoPayment);
 
             _context.Loans.Add(l);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             List<Schedule> schedules = new List<Schedule>();
 
@@ -239,7 +239,7 @@ namespace olappApi.Controllers
                 }
 
                 //P.O Cash
-                if (l.Type == "Bi-Monthly" || l.Type == "P.O Cash")
+                if (l.Type == "Bi-Monthly" || l.Type == "PO Cash")
                 {
                     temp.Date = DateTime.Now.AddDays(i * 15);
                     schedules.Add(temp);
@@ -260,9 +260,9 @@ namespace olappApi.Controllers
             }
 
             _context.Schedules.AddRange(schedules);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            return Ok(l);
+            return  Ok(l);
         }
 
         [HttpGet("GetClientById")]
