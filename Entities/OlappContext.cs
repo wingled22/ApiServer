@@ -15,6 +15,8 @@ public partial class OlappContext : DbContext
     {
     }
 
+    public virtual DbSet<AppUser> AppUsers { get; set; }
+
     public virtual DbSet<Client> Clients { get; set; }
 
     public virtual DbSet<Loan> Loans { get; set; }
@@ -22,8 +24,6 @@ public partial class OlappContext : DbContext
     public virtual DbSet<Schedule> Schedules { get; set; }
 
     public virtual DbSet<Transaction> Transactions { get; set; }
-
-    public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<Usertype> Usertypes { get; set; }
 
@@ -36,6 +36,22 @@ public partial class OlappContext : DbContext
         modelBuilder
             .UseCollation("utf8mb4_general_ci")
             .HasCharSet("utf8mb4");
+
+        modelBuilder.Entity<AppUser>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.Property(e => e.Id).HasColumnType("int(11)");
+            entity.Property(e => e.Password)
+                .HasMaxLength(50)
+                .HasColumnName("password");
+            entity.Property(e => e.Username)
+                .HasMaxLength(50)
+                .HasColumnName("username");
+            entity.Property(e => e.Usertype)
+                .HasColumnType("int(11)")
+                .HasColumnName("usertype");
+        });
 
         modelBuilder.Entity<Client>(entity =>
         {
@@ -194,24 +210,6 @@ public partial class OlappContext : DbContext
             entity.Property(e => e.ScheduleId)
                 .HasColumnType("bigint(20)")
                 .HasColumnName("schedule_id");
-        });
-
-        modelBuilder.Entity<User>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
-
-            entity.ToTable("User");
-
-            entity.Property(e => e.Id).HasColumnType("int(11)");
-            entity.Property(e => e.Password)
-                .HasMaxLength(50)
-                .HasColumnName("password");
-            entity.Property(e => e.Username)
-                .HasMaxLength(50)
-                .HasColumnName("username");
-            entity.Property(e => e.Usertype)
-                .HasColumnType("int(11)")
-                .HasColumnName("usertype");
         });
 
         modelBuilder.Entity<Usertype>(entity =>

@@ -18,14 +18,34 @@ namespace olappApi.Controllers
             _context = context;
         }
 
-        public IActionResult Login(UserAuthModel user){
-            
-            // if(user != null){
+        [HttpPost("Login")]
+        public IActionResult Login(UserLogInModel user)
+        {
+
+            try
+            {
+                if (user != null)
+                {
+                    AppUser u = _context.AppUsers.Where(x => x.Username == user.UserName && x.Password == user.Password).FirstOrDefault();
+
+                    if (u == null)
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        return Ok(u);
+                    }
+                }
+
+                return NotFound();
+
+            }
+            catch (Exception e){
+                return BadRequest();
+            }
 
 
-            // }
-            
-            return Ok();
         }
 
 
