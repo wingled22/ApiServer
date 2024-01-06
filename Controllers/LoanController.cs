@@ -24,12 +24,12 @@ namespace olappApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Loan>>> GetLoans()
         {
-          if (_context.Loans == null)
-          {
-              return NotFound();
-          }
+            if (_context.Loans == null)
+            {
+                return NotFound();
+            }
 
-           
+
             return await _context.Loans.ToListAsync();
         }
 
@@ -37,12 +37,12 @@ namespace olappApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Loan>> GetLoan(long id)
         {
-          if (_context.Loans == null)
-          {
-              return NotFound();
-          }
+            if (_context.Loans == null)
+            {
+                return NotFound();
+            }
 
-          
+
 
             var loan = await _context.Loans.FindAsync(id);
 
@@ -54,7 +54,28 @@ namespace olappApi.Controllers
             return loan;
         }
 
-        
+        [HttpGet("GetPastDueLoans")]
+        public ActionResult GetPastDueLoans()
+        {
+            try
+            {
+                // Get the current datetime
+                DateTime now = DateTime.Now;
+
+                // Retrieve loans with due dates in the past
+                List<Loan> pastDueLoans = _context.Loans
+                    .Where(loan => loan.DueDate.HasValue && loan.DueDate < now && loan.Status != "Paid")
+                    .ToList();
+
+                return Ok(pastDueLoans);
+            }
+            catch (Exception)
+            {
+                return NoContent();
+            }
+        }
+
+
 
         // // PUT: api/Loan/5
         // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
