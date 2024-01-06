@@ -113,6 +113,23 @@ namespace olappApi.Controllers
             _context.Loans.Add(l);
             _context.SaveChanges();
 
+            //add deductCBU
+            DeductionCbu deductionCbu = new DeductionCbu {
+                LoanId = l.Id,
+                TotalCbu = l.DeductCbu,
+                DateAdded = DateTime.Now
+            };
+            _context.DeductionCbus.Add(deductionCbu);
+            _context.SaveChanges();
+
+            DeductionInsurance deductionInsurance = new DeductionInsurance{
+                LoanId = l.Id,
+                TotalInsurance = l.DeductInsurance,
+                DateAdded = DateTime.Now
+            };
+            _context.DeductionInsurances.Add(deductionInsurance);
+            _context.SaveChanges();
+
             List<Schedule> schedules = new List<Schedule>();
 
             for (int i = 1; i <= l.NoPayment; i++)
@@ -215,6 +232,24 @@ namespace olappApi.Controllers
 
             _context.Loans.Add(l);
             await _context.SaveChangesAsync();
+
+
+            //add deductCBU
+            DeductionCbu deductionCbu = new DeductionCbu {
+                LoanId = l.Id,
+                TotalCbu = l.DeductCbu,
+                DateAdded = DateTime.Now
+            };
+            _context.DeductionCbus.Add(deductionCbu);
+            _context.SaveChanges();
+
+            DeductionInsurance deductionInsurance = new DeductionInsurance{
+                LoanId = l.Id,
+                TotalInsurance = l.DeductInsurance,
+                DateAdded = DateTime.Now
+            };
+            _context.DeductionInsurances.Add(deductionInsurance);
+            _context.SaveChanges();
 
             List<Schedule> schedules = new List<Schedule>();
 
