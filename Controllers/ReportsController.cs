@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using olappApi.Entities;
 using olappApi.Model;
 
@@ -21,9 +22,24 @@ namespace olappApi.Controllers
         }
 
         [HttpGet("PromisoryReport")]
-        public ActionResult<PromisoryReportViewModel> PromisoryReport(long loanId){
+        public async Task<ActionResult<PromisoryReportViewModel>> PromisoryReport(long loanId){
+
+            if(loanId == null || loanId <= 0 )
+                return NoContent();
+
+            Loan l = await _context.Loans.Where(x => x.Id == loanId).FirstOrDefaultAsync();
             
+            if(l == null )
+                return NoContent();
+            
+            Client c = await _context.Clients.Where(x => x.Id == l.ClientId).FirstOrDefaultAsync();
+            List<Schedule> schedules = await _context.Schedules.Where(x => x.LoanId == l.Id).ToListAsync();
+         
+
             PromisoryReportViewModel r = new PromisoryReportViewModel();
+            r.LoanInfo = l;
+            r.ClientInfo = c;
+            r.ListOfSchedules = schedules;
 
 
             return Ok(r);
