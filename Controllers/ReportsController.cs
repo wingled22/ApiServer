@@ -22,19 +22,20 @@ namespace olappApi.Controllers
         }
 
         [HttpGet("PromisoryReport")]
-        public async Task<ActionResult<PromisoryReportViewModel>> PromisoryReport(long loanId){
+        public async Task<ActionResult<PromisoryReportViewModel>> PromisoryReport(long loanId)
+        {
 
-            if(loanId == null || loanId <= 0 )
+            if (loanId == null || loanId <= 0)
                 return NoContent();
 
             Loan l = await _context.Loans.Where(x => x.Id == loanId).FirstOrDefaultAsync();
-            
-            if(l == null )
+
+            if (l == null)
                 return NoContent();
-            
+
             Client c = await _context.Clients.Where(x => x.Id == l.ClientId).FirstOrDefaultAsync();
             List<Schedule> schedules = await _context.Schedules.Where(x => x.LoanId == l.Id).ToListAsync();
-         
+
 
             PromisoryReportViewModel r = new PromisoryReportViewModel();
             r.LoanInfo = l;
@@ -43,7 +44,24 @@ namespace olappApi.Controllers
 
 
             return Ok(r);
-        
-        } 
+
+        }
+
+        public ActionResult GetDeductionCBU()
+        {
+            try
+            {
+                // List<
+
+                return Ok();
+
+
+            }
+            catch (System.Exception)
+            {
+
+                return NoContent();
+            }
+        }
     }
 }
