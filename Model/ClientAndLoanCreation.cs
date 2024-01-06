@@ -35,6 +35,8 @@ public class ClientAndLoanCreation
     public decimal DeductInsurance { get; set; }
     [Required]
     public decimal DeductOther { get; set; }
+
+    public DateTime? DateTime { get; set; }
 }
 
 public class LoanCreation
@@ -57,4 +59,6 @@ public class LoanCreation
     public decimal DeductInsurance { get; set; }
     [Required]
     public decimal DeductOther { get; set; }
+
+    public DateTime DateTime { get; set; }
 }
