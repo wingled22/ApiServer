@@ -19,6 +19,10 @@ public partial class OlappContext : DbContext
 
     public virtual DbSet<Client> Clients { get; set; }
 
+    public virtual DbSet<DeductionCbu> DeductionCbus { get; set; }
+
+    public virtual DbSet<DeductionInsurance> DeductionInsurances { get; set; }
+
     public virtual DbSet<Loan> Loans { get; set; }
 
     public virtual DbSet<Schedule> Schedules { get; set; }
@@ -101,6 +105,48 @@ public partial class OlappContext : DbContext
             entity.Property(e => e.Purok)
                 .HasColumnType("int(11)")
                 .HasColumnName("purok");
+        });
+
+        modelBuilder.Entity<DeductionCbu>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("DeductionCBU");
+
+            entity.Property(e => e.Id).HasColumnType("bigint(20)");
+            entity.Property(e => e.DateAdded)
+                .HasColumnType("datetime")
+                .HasColumnName("dateAdded");
+            entity.Property(e => e.DateSadded)
+                .HasMaxLength(255)
+                .HasColumnName("dateSAdded");
+            entity.Property(e => e.LoanId)
+                .HasColumnType("bigint(20)")
+                .HasColumnName("loanId");
+            entity.Property(e => e.TotalCbu)
+                .HasPrecision(18, 2)
+                .HasColumnName("totalCBU");
+        });
+
+        modelBuilder.Entity<DeductionInsurance>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("DeductionInsurance");
+
+            entity.Property(e => e.Id).HasColumnType("bigint(20)");
+            entity.Property(e => e.DateAdded)
+                .HasColumnType("datetime")
+                .HasColumnName("dateAdded");
+            entity.Property(e => e.DateSadded)
+                .HasMaxLength(255)
+                .HasColumnName("dateSAdded");
+            entity.Property(e => e.LoanId)
+                .HasColumnType("bigint(20)")
+                .HasColumnName("loanId");
+            entity.Property(e => e.TotalInsurance)
+                .HasPrecision(18, 2)
+                .HasColumnName("totalInsurance");
         });
 
         modelBuilder.Entity<Loan>(entity =>
