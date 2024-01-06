@@ -167,7 +167,7 @@ public partial class OlappContext : DbContext
                 .HasColumnType("bigint(20)")
                 .HasColumnName("client_id");
             entity.Property(e => e.DateTime)
-                .HasMaxLength(255)
+                .HasColumnType("datetime")
                 .HasColumnName("date_time");
             entity.Property(e => e.DeductCbu)
                 .HasPrecision(18, 2)
