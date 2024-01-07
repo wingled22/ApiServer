@@ -468,8 +468,8 @@ namespace olappApi.Controllers
                         TotalPenalty = (long)l.TotalPenalty,
                         AddedInterest = (long)l.AddedInterest,
                         Collected = _context.Transactions
-                        .Where(x => x.LoanId == l.Id)
-                        .Sum(s => (decimal?)s.Amount) ?? 0,
+                                    .Where(x => x.LoanId == l.Id)
+                                    .Sum(s => (decimal?)s.Amount) ?? 0,
                     }
                 ).ToListAsync();
 
