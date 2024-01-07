@@ -60,17 +60,53 @@ namespace olappApi.Controllers
         {
             try
             {
-                // Get the current datetime
                 DateTime now = DateTime.Now;
-
-                // Retrieve loans with due dates in the past
-                // List<PastDueLoans> pastDueLoans = _context.Loans
-                //     .Where(loan => loan.DueDate.HasValue && loan.DueDate < now && loan.Status != "Paid")
-                //     .ToList();
-
                 List<PastDueLoans> pastDueLoans = (
                     from loan in _context.Loans
                     where loan.DueDate.HasValue && loan.DueDate < now && loan.Status != "Paid" && loan.TotalPenalty == 0.00m
+                    select new PastDueLoans
+                    {
+                        Id = loan.Id,
+                        ClientId = loan.ClientId,
+                        Type = loan.Type,
+                        DeductCbu = loan.DeductCbu,
+                        DeductInsurance = loan.DeductInsurance,
+                        LoanAmount = loan.LoanAmount,
+                        Capital = loan.Capital,
+                        Interest = loan.Interest,
+                        InterestedAmount = loan.InterestedAmount,
+                        LoanReceivable = loan.LoanReceivable,
+                        NoPayment = loan.NoPayment,
+                        Status = loan.Status,
+                        DueDate = loan.DueDate,
+                        TotalPenalty = loan.TotalPenalty,
+                        AddedInterest = loan.AddedInterest,
+                        OtherFee = loan.OtherFee,
+                        DateTime = loan.DateTime,
+                        Collected = _context.Transactions
+                                    .Where(x => x.LoanId == loan.Id)
+                                    .Sum(s => (decimal?)s.Amount) ?? 0,
+                        Client = _context.Clients.Where(x => x.Id == loan.ClientId).FirstOrDefault()
+                    }
+                ).ToList();
+
+                return Ok(pastDueLoans);
+            }
+            catch (Exception)
+            {
+                return NoContent();
+            }
+        }
+
+        [HttpGet("GetPenalizedLoan")]
+        public ActionResult GetPenalizedLoan()
+        {
+            try
+            {
+                DateTime now = DateTime.Now;
+                List<PastDueLoans> pastDueLoans = (
+                    from loan in _context.Loans
+                    where loan.DueDate.HasValue && loan.DueDate < now && loan.Status != "Paid" && loan.TotalPenalty > 0.00m
                     select new PastDueLoans
                     {
                         Id = loan.Id,
