@@ -462,7 +462,7 @@ namespace olappApi.Controllers
                         InterestedAmount = l.InterestedAmount ?? 0,
                         LoanReceivable = l.LoanReceivable ?? 0,
                         NoPayment = l.NoPayment ?? 0,
-                        Status = l.Status,
+                        Status = l.TotalPenalty == 0.00m ? l.Status : "Penalized",
                         DateTime = l.DateTime.ToString(),
                         DueDate = l.DueDate ?? DateTime.MinValue, // Assuming DueDate is nullable, replace DateTime.MinValue with the default value you prefer
                         TotalPenalty = (long)l.TotalPenalty,
