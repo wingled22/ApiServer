@@ -10,4 +10,10 @@ namespace olappApi.Model
         public long SchedId { get; set; }
         public decimal Amount { get; set; }
     }
+
+    public class PenaltyPaymentProcessingModel
+    {
+        public long LoanId { get; set; }
+        public decimal Amount { get; set; }
+    }
 }

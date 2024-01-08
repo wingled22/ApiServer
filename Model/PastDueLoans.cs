@@ -45,4 +45,10 @@ namespace olappApi.Model
         public Client Client { get; set; }
         public decimal? Collected { get; internal set; }
     }
+
+    public class PastDueLoanPayable{
+        public long LoanId { get; set; }
+        public decimal Payable { get; set; }
+        public decimal SubTotalPayment { get; set; }
+    }
 }

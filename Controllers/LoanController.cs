@@ -150,7 +150,7 @@ namespace olappApi.Controllers
 
                 if (loan == null)
                     return BadRequest();
-                
+
                 loan.TotalPenalty = penalty.Amount;
 
                 _context.Loans.Update(loan);
@@ -163,6 +163,37 @@ namespace olappApi.Controllers
             }
         }
 
+        [HttpGet("GetPenalizedLoanInfo")]
+        public IActionResult GetPenalizedLoanInfo(long loanID)
+        {
+            try
+            {
+                Loan l = _context.Loans.Where(q => q.Id == loanID).FirstOrDefault();
+                
+                if (l == null)
+                    return BadRequest();
+
+                var pastDueLoan = (
+                    from loan in _context.Loans
+                    where loan.Id == loanID
+                    select new PastDueLoanPayable{
+                        LoanId = loan.Id,
+                        SubTotalPayment = _context.Transactions
+                                    .Where(x => x.LoanId == loan.Id)
+                                    .Sum(s => (decimal?)s.Amount) ?? 0,
+                    }
+                ).FirstOrDefault();
+
+                pastDueLoan.Payable = (decimal)(l.TotalPenalty + l.LoanAmount) - pastDueLoan.SubTotalPayment; 
+
+                return Ok(pastDueLoan);
+            }
+            catch (System.Exception)
+            {
+
+                return BadRequest();
+            }
+        }
 
 
         // // PUT: api/Loan/5
