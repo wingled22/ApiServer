@@ -473,12 +473,14 @@ namespace olappApi.Controllers
                     }
                 ).ToListAsync();
 
-                if(res.Count > 0){
+                if (res.Count > 0)
+                {
                     foreach (var item in res)
                     {
-                        if(item.Status == "Penalized" ){
-                            var ss = (decimal) (item.LoanAmount + item.TotalPenalty)- item.Collected;
-                            if(ss == 0.00m)
+                        if (item.Status == "Penalized")
+                        {
+                            var ss = (decimal)(item.LoanAmount + item.TotalPenalty) - item.Collected;
+                            if (ss == 0.00m)
                                 item.Status = "Paid";
                         }
                     }
@@ -515,6 +517,26 @@ namespace olappApi.Controllers
                 return StatusCode(500, "Internal server error");
             }
 
+        }
+
+        [HttpGet("GetClientInfoFromLoan")]
+        public async Task<ActionResult<Client>> GetClientInfoFromLoan(long loanId)
+        {
+            try
+            {
+                Loan loan = await _context.Loans.Where(q => q.Id == loanId).FirstOrDefaultAsync();
+
+                if (loan == null)
+                    return BadRequest();
+
+                Client client = await _context.Clients.Where(q => q.Id == loan.ClientId).FirstOrDefaultAsync();
+
+                return Ok(client);
+            }
+            catch (System.Exception)
+            {
+                return BadRequest();
+            }
         }
 
         private bool ClientExists(long id)

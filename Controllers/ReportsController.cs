@@ -47,14 +47,14 @@ namespace olappApi.Controllers
 
         }
 
-        [HttpGet("GetDeductionCBUs")]
-        public ActionResult GetDeductionCBUs(DateTime startDate, DateTime endDate)
+        [HttpPost("GetDeductionCBUs")]
+        public ActionResult GetDeductionCBUs(CBUSearchModel s)
         {
             try
             {
                 // Retrieve DeductionCBU records between the specified dates
                 List<DeductionCbu> deductionCbus = _context.DeductionCbus
-                    .Where(dc => dc.DateAdded >= startDate && dc.DateAdded <= endDate)
+                    .Where(dc => dc.DateAdded >= s.startDate && dc.DateAdded <= s.endDate)
                     .ToList();
 
                 return Ok(deductionCbus);
@@ -65,14 +65,14 @@ namespace olappApi.Controllers
             }
         }
 
-        [HttpGet("GetDeductionInsurances")]
-        public ActionResult GetDeductionInsurances(DateTime startDate, DateTime endDate)
+        [HttpPost("GetDeductionInsurances")]
+        public ActionResult GetDeductionInsurances(CBUSearchModel s)
         {
             try
             {
                 // Retrieve DeductionCBU records between the specified dates
                 List<DeductionInsurance> deductionInsurances = _context.DeductionInsurances
-                    .Where(dc => dc.DateAdded >= startDate && dc.DateAdded <= endDate)
+                    .Where(dc => dc.DateAdded >= s.startDate && dc.DateAdded <= s.endDate)
                     .ToList();
 
                 return Ok(deductionInsurances);
