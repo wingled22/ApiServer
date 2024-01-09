@@ -473,6 +473,17 @@ namespace olappApi.Controllers
                     }
                 ).ToListAsync();
 
+                if(res.Count > 0){
+                    foreach (var item in res)
+                    {
+                        if(item.Status == "Penalized" ){
+                            var ss = (decimal) (item.LoanAmount + item.TotalPenalty)- item.Collected;
+                            if(ss == 0.00m)
+                                item.Status = "Paid";
+                        }
+                    }
+                }
+
                 // return await _context.Loans.Where(x => x.ClientId == id).ToListAsync();
                 return res;
             }

@@ -257,6 +257,14 @@ namespace olappApi.Controllers
                     _context.Loans.Update(ln);
                     _context.SaveChanges();
 
+                    List<Schedule> schedules = _context.Schedules.Where(x => x.LoanId == ln.Id).ToList();
+                    foreach (var item in schedules)
+                    {
+                        item.Status = "Paid";
+                    }
+                    _context.Schedules.UpdateRange(schedules);
+                    _context.SaveChanges();
+
                 }
                 else
                 {
