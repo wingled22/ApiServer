@@ -48,7 +48,7 @@ namespace olappApi.Controllers
         }
 
         [HttpPost("GetDeductionCBUs")]
-        public ActionResult GetDeductionCBUs(CBUSearchModel s)
+        public ActionResult GetDeductionCBUs(BetweenDateSearchModel s)
         {
             try
             {
@@ -66,7 +66,7 @@ namespace olappApi.Controllers
         }
 
         [HttpPost("GetDeductionInsurances")]
-        public ActionResult GetDeductionInsurances(CBUSearchModel s)
+        public ActionResult GetDeductionInsurances(BetweenDateSearchModel s)
         {
             try
             {
@@ -82,5 +82,38 @@ namespace olappApi.Controllers
                 return NoContent();
             }
         }
+
+        [HttpPost("GetDelinquentReport")]
+        public IActionResult GetDelinquentReport(BetweenDateSearchModel s)
+        {
+
+            try
+            {
+                var result = (
+                    from loan in _context.Loans
+                    join client in _context.Clients on loan.ClientId equals client.Id
+                    where loan.DueDate >= s.startDate && loan.DueDate <= s.endDate && loan.Status != "Paid"
+                    group loan by new { client.Id, client.Name } into clientGroup
+                    select new DelinquentReportModel
+                    {
+                        ClientId = clientGroup.Key.Id,
+                        ClientName = clientGroup.Key.Name,
+                        PastDueLoans = clientGroup.ToList()
+                    }
+                ).ToList();
+
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions appropriately (log, return error response, etc.)
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
+
+        }
+
+
+
     }
 }

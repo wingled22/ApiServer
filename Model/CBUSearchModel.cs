@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 
 namespace olappApi.Model
 {
-    public class CBUSearchModel
+    public class BetweenDateSearchModel
     {
         public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }
     }
+
+
 }
