@@ -64,6 +64,15 @@ namespace olappApi.Controllers
             _context.Clients.Add(client);
             _context.SaveChanges();
 
+            AppUser user = new AppUser{
+                Username = client.EmailAddress,
+                Password = client.ContactNumber,
+                Usertype = 3
+            };
+
+            _context.AppUsers.Add(user);
+            _context.SaveChanges();
+
             // Loan l = new Loan();
             // l.ClientId = client.Id;
             // l.Capital = c.Capital;
