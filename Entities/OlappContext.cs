@@ -46,6 +46,9 @@ public partial class OlappContext : DbContext
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity.Property(e => e.Id).HasColumnType("int(11)");
+            entity.Property(e => e.ClientId)
+                .HasColumnType("bigint(20)")
+                .HasColumnName("clientId");
             entity.Property(e => e.Password)
                 .HasMaxLength(50)
                 .HasColumnName("password");

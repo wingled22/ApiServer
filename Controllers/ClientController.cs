@@ -65,129 +65,14 @@ namespace olappApi.Controllers
             _context.SaveChanges();
 
             AppUser user = new AppUser{
-                Username = client.EmailAddress,
+                Username = client.Email,
                 Password = client.ContactNumber,
-                Usertype = 3
+                Usertype = 3,
+                ClientId = client.Id
             };
 
             _context.AppUsers.Add(user);
             _context.SaveChanges();
-
-            // Loan l = new Loan();
-            // l.ClientId = client.Id;
-            // l.Capital = c.Capital;
-            // l.Interest = c.Interest;
-            // l.NoPayment = c.NoOfPayments;
-            // l.DeductCbu = c.DeductCBU;
-            // l.DeductInsurance = c.DeductInsurance;
-            // l.OtherFee = c.DeductOther;
-            // l.Type = c.LoanType;
-            // l.Status = "Unpaid";
-
-            // if (l.Interest == null || l.Interest == 0)
-            //     l.InterestedAmount = 0;
-            // else
-            //     l.InterestedAmount = (l.Interest / 100) * l.Capital;
-
-            // l.LoanAmount = l.Capital + l.InterestedAmount;
-            // l.LoanReceivable = l.Capital - (l.DeductCbu + l.DeductInsurance + l.OtherFee);
-
-            // l.DateTime = DateTime.Now;
-            // if (l.Type == "Daily")
-            //     l.DueDate = DateTime.Now.AddDays(Convert.ToInt32(l.NoPayment));
-
-            // //Emergency
-            // if (l.Type == "Weekly" || l.Type == "Emergency")
-            // {
-            //     l.DueDate = DateTime.Now.AddDays(Convert.ToInt32(l.NoPayment) * 7);
-            // }
-
-            // //P.O Cash
-            // if (l.Type == "Bi-Monthly" || l.Type == "PO Cash")
-            // {
-            //     l.DueDate = DateTime.Now.AddDays(Convert.ToInt32(l.NoPayment) * 15);
-            // }
-
-            // //Others
-            // if (l.Type == "Monthly" || l.Type == "Others")
-            // {
-            //     l.DueDate = DateTime.Now.AddMonths(Convert.ToInt32(l.NoPayment));
-            // }
-            // if (l.Type == "Annualy")
-            // {
-            //     l.DueDate = DateTime.Now.AddYears(Convert.ToInt32(l.NoPayment));
-            // }
-
-            // decimal dailyPayment = Convert.ToDecimal(l.LoanAmount / l.NoPayment);
-
-            // _context.Loans.Add(l);
-            // _context.SaveChanges();
-
-            // //add deductCBU
-            // DeductionCbu deductionCbu = new DeductionCbu
-            // {
-            //     LoanId = l.Id,
-            //     TotalCbu = l.DeductCbu,
-            //     DateAdded = DateTime.Now
-            // };
-            // _context.DeductionCbus.Add(deductionCbu);
-            // _context.SaveChanges();
-
-            // DeductionInsurance deductionInsurance = new DeductionInsurance
-            // {
-            //     LoanId = l.Id,
-            //     TotalInsurance = l.DeductInsurance,
-            //     DateAdded = DateTime.Now
-            // };
-            // _context.DeductionInsurances.Add(deductionInsurance);
-            // _context.SaveChanges();
-
-            // List<Schedule> schedules = new List<Schedule>();
-
-            // for (int i = 1; i <= l.NoPayment; i++)
-            // {
-            //     Schedule temp = new Schedule();
-            //     temp.LoanId = l.Id;
-            //     temp.Collectables = dailyPayment;
-            //     temp.Status = "Unpaid";
-
-            //     if (l.Type == "Daily")
-            //     {
-            //         temp.Date = DateTime.Now.AddDays(i);
-            //         schedules.Add(temp);
-            //     }
-
-            //     //Emergency
-            //     if (l.Type == "Weekly" || l.Type == "Emergency")
-            //     {
-            //         temp.Date = DateTime.Now.AddDays(i * 7);
-            //         schedules.Add(temp);
-            //     }
-
-            //     //P.O Cash
-            //     if (l.Type == "Bi-Monthly" || l.Type == "PO Cash")
-            //     {
-            //         temp.Date = DateTime.Now.AddDays(i * 15);
-            //         schedules.Add(temp);
-            //     }
-
-            //     //Others
-            //     if (l.Type == "Monthly" || l.Type == "Others")
-            //     {
-            //         temp.Date = DateTime.Now.AddMonths(i);
-            //         schedules.Add(temp);
-            //     }
-            //     if (l.Type == "Annualy")
-            //     {
-            //         temp.Date = DateTime.Now.AddYears(i);
-            //         schedules.Add(temp);
-            //     }
-
-            // }
-
-            // _context.Schedules.AddRange(schedules);
-            // _context.SaveChanges();
-
 
             // return Ok();
             Loan l = new Loan();

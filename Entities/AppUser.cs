@@ -11,5 +11,7 @@ public partial class AppUser
 
     public string Password { get; set; } = null!;
 
+    public long ClientId { get; set; }
+
     public int Usertype { get; set; }
 }
