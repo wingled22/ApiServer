@@ -169,14 +169,15 @@ namespace olappApi.Controllers
             try
             {
                 Loan l = _context.Loans.Where(q => q.Id == loanID).FirstOrDefault();
-                
+
                 if (l == null)
                     return BadRequest();
 
                 var pastDueLoan = (
                     from loan in _context.Loans
                     where loan.Id == loanID
-                    select new PastDueLoanPayable{
+                    select new PastDueLoanPayable
+                    {
                         LoanId = loan.Id,
                         SubTotalPayment = _context.Transactions
                                     .Where(x => x.LoanId == loan.Id)
@@ -184,7 +185,7 @@ namespace olappApi.Controllers
                     }
                 ).FirstOrDefault();
 
-                pastDueLoan.Payable = (decimal)(l.TotalPenalty + l.LoanAmount) - pastDueLoan.SubTotalPayment; 
+                pastDueLoan.Payable = (decimal)(l.TotalPenalty + l.LoanAmount) - pastDueLoan.SubTotalPayment;
 
                 return Ok(pastDueLoan);
             }
@@ -195,72 +196,118 @@ namespace olappApi.Controllers
             }
         }
 
+        [HttpGet("GetTodaySchedule")]
+        public async Task<IActionResult> GetTodaySchedule()
+        {
+            try
+            {
+                // Get today's date
+                DateTime today = DateTime.Today;
 
-        // // PUT: api/Loan/5
-        // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        // [HttpPut("{id}")]
-        // public async Task<IActionResult> PutLoan(long id, Loan loan)
-        // {
-        //     if (id != loan.Id)
-        //     {
-        //         return BadRequest();
-        //     }
+                // // Retrieve schedules for today including related client information using a join
+                // var result = await (from schedule in _context.Schedules
+                //                     join loan in _context.Loans on schedule.LoanId equals loan.Id
+                //                     join client in _context.Clients on loan.ClientId equals client.Id
+                //                     where schedule.Date != null && schedule.Date.Value.Date == today
+                //                     select new
+                //                     {
+                //                         ScheduleId = schedule.Id,
+                //                         Collectables = schedule.Collectables,
+                //                         ScheduleDate = schedule.Date,
+                //                         Status = schedule.Status,
+                //                         ClientName = client.Name,
+                //                         City = client.City,
+                //                         Barangay = client.Barangay,
+                //                         Province = client.Province,
+                //                     }).ToListAsync();
 
-        //     _context.Entry(loan).State = EntityState.Modified;
+                var result = await (from schedule in _context.Schedules
+                                    join loan in _context.Loans on schedule.LoanId equals loan.Id
+                                    join client in _context.Clients on loan.ClientId equals client.Id
+                                    where schedule.Date != null && schedule.Date.Value.Date == today
+                                    group new { schedule, loan, client } by new
+                                    {
+                                        client.Province,
+                                        client.City,
+                                        client.Barangay
+                                    } into groupedData
+                                    select new
+                                    {
+                                        Province = groupedData.Key.Province,
+                                        City = groupedData.Key.City,
+                                        Barangay = groupedData.Key.Barangay,
+                                        Schedules = groupedData.Select(g => new
+                                        {
+                                            ScheduleId = g.schedule.Id,
+                                            Collectables = g.schedule.Collectables,
+                                            ScheduleDate = g.schedule.Date,
+                                            Status = g.schedule.Status,
+                                            ClientName = g.client.Name
+                                        })
+                                    }).ToListAsync();
 
-        //     try
-        //     {
-        //         await _context.SaveChangesAsync();
-        //     }
-        //     catch (DbUpdateConcurrencyException)
-        //     {
-        //         if (!LoanExists(id))
-        //         {
-        //             return NotFound();
-        //         }
-        //         else
-        //         {
-        //             throw;
-        //         }
-        //     }
 
-        //     return NoContent();
-        // }
+                if (result == null || !result.Any())
+                {
+                    return NotFound("No schedules found for today.");
+                }
 
-        // // POST: api/Loan
-        // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        // [HttpPost]
-        // public async Task<ActionResult<Loan>> PostLoan(Loan loan)
-        // {
-        //   if (_context.Loans == null)
-        //   {
-        //       return Problem("Entity set 'OlappContext.Loans'  is null.");
-        //   }
-        //     _context.Loans.Add(loan);
-        //     await _context.SaveChangesAsync();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as needed
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
-        //     return CreatedAtAction("GetLoan", new { id = loan.Id }, loan);
-        // }
+        [HttpGet("GetSchedulesByDate")]
+        public async Task<IActionResult> GetSchedulesByDate([FromQuery] DateTime date)
+        {
+            try
+            {
+                // Retrieve schedules for the specified date including related client information using a join
+                var result = await (from schedule in _context.Schedules
+                                    join loan in _context.Loans on schedule.LoanId equals loan.Id
+                                    join client in _context.Clients on loan.ClientId equals client.Id
+                                    where schedule.Date != null && schedule.Date.Value.Date == date.Date
+                                    group new { schedule, loan, client } by new
+                                    {
+                                        client.Province,
+                                        client.City,
+                                        client.Barangay
+                                    } into groupedData
+                                    select new
+                                    {
+                                        Province = groupedData.Key.Province,
+                                        City = groupedData.Key.City,
+                                        Barangay = groupedData.Key.Barangay,
+                                        Schedules = groupedData.Select(g => new
+                                        {
+                                            ScheduleId = g.schedule.Id,
+                                            Collectables = g.schedule.Collectables,
+                                            ScheduleDate = g.schedule.Date,
+                                            Status = g.schedule.Status,
+                                            ClientName = g.client.Name,
+                                            AdditionalAddressInfo = g.client.AdditionalAddressInfo
+                                        })
+                                    }).ToListAsync();
 
-        // DELETE: api/Loan/5
-        // [HttpDelete("{id}")]
-        // public async Task<IActionResult> DeleteLoan(long id)
-        // {
-        //     if (_context.Loans == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //     var loan = await _context.Loans.FindAsync(id);
-        //     if (loan == null)
-        //     {
-        //         return NotFound();
-        //     }
+                if (result == null || !result.Any())
+                {
+                    return NotFound($"No schedules found for {date.ToShortDateString()}.");
+                }
 
-        //     _context.Loans.Remove(loan);
-        //     await _context.SaveChangesAsync();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as needed
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
-        //     return NoContent();
-        // }
+
 
         private bool LoanExists(long id)
         {
