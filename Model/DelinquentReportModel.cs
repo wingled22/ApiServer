@@ -10,6 +10,7 @@ namespace olappApi.Model
     {
         public long ClientId { get; set; }
         public string ClientName { get; set; }
+         public decimal TotalPayments { get; set; }
         public List<Loan> PastDueLoans { get; set; }
     }
 }
