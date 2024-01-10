@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -41,5 +42,28 @@ namespace olappApi.Controllers
 
             return Ok(trans);
         }
+
+        [HttpGet("{clientId}")]
+    public async Task<IActionResult> GetLoanDetails(long clientId)
+    {
+        var res = (from loan in _context.Loans
+                    join transaction in _context.Transactions on loan.Id equals transaction.LoanId
+                    where loan.ClientId == clientId 
+                    select new
+                    {
+                        loan.Id,
+                        loan.Type,
+                        loan.DueDate,
+                        Transactions = _context.Transactions.Where(x=> x.LoanId == loan.Id).ToList()
+                    }).ToList();
+
+        
+        if (res == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(res);
+    }
     }
 }
