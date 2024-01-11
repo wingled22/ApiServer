@@ -44,26 +44,38 @@ namespace olappApi.Controllers
         }
 
         [HttpGet("{clientId}")]
-    public async Task<IActionResult> GetLoanDetails(long clientId)
-    {
-        var res = (from loan in _context.Loans
-                    join transaction in _context.Transactions on loan.Id equals transaction.LoanId
-                    where loan.ClientId == clientId 
-                    select new
-                    {
-                        loan.Id,
-                        loan.Type,
-                        loan.DueDate,
-                        Transactions = _context.Transactions.Where(x=> x.LoanId == loan.Id).ToList()
-                    }).ToList();
-
-        
-        if (res == null)
+        public async Task<IActionResult> GetLoanDetails(long clientId)
         {
-            return NotFound();
-        }
+            var res = (from loan in _context.Loans
+                        join transaction in _context.Transactions on loan.Id equals transaction.LoanId
+                        where loan.ClientId == clientId 
+                        select new
+                        {
+                            loan.Id,
+                            loan.Type,
+                            loan.DueDate,
+                            Transactions = transaction
+                        }).ToList();
 
-        return Ok(res);
-    }
+        //   var res = (from loan in _context.Loans
+        //        join transaction in _context.Transactions on loan.Id equals transaction.LoanId
+        //        where loan.ClientId == clientId
+        //        group transaction by loan.Id into loanGroup
+        //        select new
+        //        {
+        //            Id = loanGroup.Key,
+        //            Type = loanGroup.First().Loan.Type,
+        //            DueDate = loanGroup.First().Loan.DueDate,
+        //            Transactions = loanGroup.ToList()
+        //        }).ToList();
+
+            
+            if (res == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(res);
+        }
     }
 }
