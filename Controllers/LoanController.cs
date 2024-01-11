@@ -307,6 +307,10 @@ namespace olappApi.Controllers
             }
         }
 
+        [HttpGet("GetTotalLoanCount")]
+        public IActionResult GetTotalLoanCount(){
+            return Ok(_context.Loans.ToList());
+        }
 
 
         private bool LoanExists(long id)
