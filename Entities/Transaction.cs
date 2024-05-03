@@ -5,7 +5,7 @@ namespace olappApi.Entities;
 
 public partial class Transaction
 {
-    public long TransId { get; set; }
+    public long Id { get; set; }
 
     public decimal? Amount { get; set; }
 

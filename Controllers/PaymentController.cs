@@ -155,7 +155,7 @@ namespace olappApi.Controllers
                     _context.Transactions.AddRange(transactions);
                     _context.SaveChanges();
 
-                    var transIds = transactions.Select(s => (int)s.TransId).ToList();
+                    var transIds = transactions.Select(s => (int)s.Id).ToList();
 
                     var loan = _context.Loans.Where(q => q.Id == stats.LoanId).FirstOrDefault();
                     transactions = _context.Transactions.Where(q => q.LoanId == stats.LoanId).ToList();

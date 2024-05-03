@@ -1,4 +1,7 @@
-bin/**
-obj/**
+bin/
+obj/
+Migrations/
+*.db-shm
+*.db-wal
 obj/Debug/net7.0/olappApi.assets.cache
 obj/Debug/net7.0/olappApi.csproj.FileListAbsolute.txt

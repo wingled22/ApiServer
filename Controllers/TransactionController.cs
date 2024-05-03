@@ -38,7 +38,7 @@ namespace olappApi.Controllers
         {
 
             Transaction trans = _context.Transactions
-                                            .Where(x => x.TransId == transId).FirstOrDefault();
+                                            .Where(x => x.Id == transId).FirstOrDefault();
 
             return Ok(trans);
         }
