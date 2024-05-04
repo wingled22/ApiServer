@@ -15,6 +15,10 @@ public partial class OlappContext : DbContext
     {
     }
 
+    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //     => optionsBuilder.UseSqlServer("Server=localhost;Database=Olapp;User ID=SA;Password=VeryStr0ngP@ssw0rd;TrustServerCertificate=true;");
+
+
     public virtual DbSet<AppUser> AppUsers { get; set; }
 
     public virtual DbSet<Client> Clients { get; set; }

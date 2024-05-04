@@ -363,7 +363,7 @@ namespace olappApi.Controllers
                         AddedInterest = (long)l.AddedInterest,
                         Collected = _context.Transactions
                                     .Where(x => x.LoanId == l.Id)
-                                    .Sum(s => (decimal?)s.Amount) ?? 0,
+                                    .Sum(s => s.Amount) ?? 0.00m,
                     }
                 ).ToListAsync();
 
@@ -373,7 +373,7 @@ namespace olappApi.Controllers
                     {
                         if (item.Status == "Penalized")
                         {
-                            var ss = (decimal)(item.LoanAmount + item.TotalPenalty) - item.Collected;
+                            var ss = (decimal)(item.LoanAmount + (item.TotalPenalty ?? 0)) - item.Collected;
                             if (ss == 0.00m)
                                 item.Status = "Paid";
                         }

@@ -13,7 +13,11 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddDbContext<OlappContext>(options => options.UseSqlite("Data Source= Olapp.db"));
+builder.Services.AddDbContext<OlappContext>(option => 
+    option.UseSqlServer("Server=localhost;Database=Olapp;User ID=SA;Password=VeryStr0ngP@ssw0rd;TrustServerCertificate=true;")
+);
+
+// builder.Services.AddDbContext<OlappContext>(options => options.UseSqlite("Data Source= Olapp.db"));
 
 // builder.Services.AddDbContext<OlappContext>(options =>
 //     options.UseMySql("server=localhost;database=sampleapp;user=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.27-mariadb")));
