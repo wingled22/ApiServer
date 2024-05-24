@@ -77,25 +77,5 @@ namespace olappApi.Controllers
 
             return Ok(res);
         }
-
-        [HttpGet("total-GetTotalCollectedToday-today")]
-        public ActionResult<decimal> GetTotalCollectedToday()
-        {
-            try
-            {
-                // Get the current date in the format "yyyy-MM-dd"
-                string currentDate = DateTime.Now.ToString("MM/dd/yyyy");
-
-                var transactions = _context.Transactions.ToList();
-                
-               
-
-                return Ok(transactions);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
     }
 }
