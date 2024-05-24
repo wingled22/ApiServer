@@ -5,9 +5,6 @@
 2. Run this command in the package manager console
 
 	Scaffold-DbContext "Server=DESKTOP-E4OKK0E\SQLEXPRESS;Database=Wiggly;Trusted_Connection=True;"	Microsoft.EntityFrameworkCore.SqlServer -OutputDir Entities -Force
-	dotnet ef dbcontext scaffold "Server=DESKTOP-localhost;Database=TestDb;User ID=sa;Password=VeryStr0ngP@ssw0rd;"	Microsoft.EntityFrameworkCore.SqlServer -OutputDir Entities -Force
-	dotnet ef dbcontext scaffold "Server=localhost;Database=TestDb;User ID=SA;Password=VeryStr0ngP@ssw0rd;"	Microsoft.EntityFrameworkCore.SqlServer -OutputDir Entities -Force
-	dotnet ef dbcontext scaffold "Server=localhost;Database=TestDb;User ID=SA;Password=VeryStr0ngP@ssw0rd;Trusted_Connection=True;TrustServerCertificate=true;"	Microsoft.EntityFrameworkCore.SqlServer -o .\Entities -f
 
 Scaffold-DbContext [-Connection] [-Provider] [-OutputDir] [-Context] [-Schemas>] [-Tables>] 
                     [-DataAnnotations] [-Force] [-Project] [-StartupProject] [<CommonParameters>]
